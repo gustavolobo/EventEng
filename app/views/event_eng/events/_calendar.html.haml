@@ -1,0 +1,68 @@
+%h1= t('.calendar')
+
+-	today = Time.now
+- unless @year and @month
+	- @year = today.year
+	- @month = today.month
+
+- month = calendar(@year, @month)
+	
+- events = {}
+- events = events_per_month(@year, @month)
+
+.change_months
+	= link_to "<div class='change_month_circle'> < </div>".html_safe, calendar_path(:year => @year, :month => @month-1), :remote => true
+	
+	%p{:style => 'margin-left: 5px; font-size: 12px; line-height: 12px; float: left; background: ; width: 140px;'}
+		= "#{Date::MONTHNAMES[@month]} #{@year}"
+
+	= link_to "<div class='change_month_circle'> > </div>".html_safe, calendar_path(:year => @year, :month => @month+1), :remote => true
+
+.month
+	%ul{:class => 'week-header'}
+		%li{ :class => 'day-header'}
+			%div
+				%p= t('.letter_monday')
+		%li{ :class => 'day-header'}
+			%div
+				%p= t('.letter_tuesday')
+		%li{ :class => 'day-header'}
+			%div
+				%p= t('.letter_wednesday')
+		%li{ :class => 'day-header'}
+			%div
+				%p= t('.letter_thursday')
+		%li{ :class => 'day-header'}
+			%div
+				%p= t('.letter_friday')
+		%li{ :class => 'day-header'}
+			%div
+				%p= t('.letter_saturday')
+		%li{ :class => 'day-header'}
+			%div
+				%p= t('.letter_sunday')
+  
+
+	- month_day = false
+	- month.each_value do |week|
+		%ul{ :class => 'week'}
+			- week_day = 1
+			- week.each do |day|
+				- if day == 1
+					- month_day = !month_day
+    	
+				- if month_day
+					- todayistheday = ((today.day == day) and (today.month == @month) and (today.year == @year))
+					
+					%li{ :class => "day", :id => weekend?(week_day) }
+						- if events[day].empty?
+							%div{:id => todayistheday ? 'today' : events_path,  :style => todayistheday ? 'margin-left: 3px;' : ''}
+								%p= day
+						- else
+							= link_to "<div #{"style='background: #CCCCCC; color: white;'"} #{"id='today'" if todayistheday}>#{day}</div>".html_safe, "", :id => 'calendar_event'
+				- else
+					%li{ :class => 'not-day'}
+						%div
+							%p= day
+    	  
+				- week_day = week_day + 1

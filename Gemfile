@@ -15,3 +15,7 @@ gem "jquery-rails"
 
 # To use debugger
 # gem 'debugger'
+
+gem "haml", "~> 3.1.7"
+gem "haml-rails"
+gem "formtastic", "~> 2.2.0"
